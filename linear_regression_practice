@@ -1,0 +1,42 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn import linear_model
+from sklearn.metrics import r2_score
+sns.set() #seteo de seaborn para verificar el estilo de graficas que sean de seaborn y no de matplotlib
+
+# Calculo de la predicción de acuerdo a la variable independiente que son las horas trabajadas
+# y la variable dependiente que es el ingreso
+
+df = pd.read_csv('ingreso.csv')
+
+x = df['horas'].values.reshape(-1, 1) # El promedio de trabajo de las personas 
+y = df['ingreso'].values.reshape(-1, 1) # Salario de las persona
+
+# formula de la regresio lineal simple
+# y = β0 + β1 x
+
+# entrenado el modelo creado usando sklearn
+modelo = linear_model.LinearRegression()
+modelo.fit(x, y) # ajustar a las variables 'x' y 'y'
+# sacar los coeficientes  
+print("Interseccion (β0)", modelo.intercept_) # coeficiente de interseccion
+print("Pendiente (β1)", modelo.coef_) # coeficiente de pendiente
+
+y_pred = modelo.predict(x) # sacando el valor predictivo
+# grafica para pintar la linea regresiva que se encuentra más cerca de los datos
+plt.plot(x, y_pred, color='red') # x = horas, y = salarios(variable predicitiva) 
+plt.scatter(x, y)
+
+# valores muestra para hacer predicción
+entrada = [[40],[43],[44]]
+prediccion_modelo = modelo.predict(entrada)
+
+# coeficiente de determinacion para darle más exactitud al modelo y sea representativo
+r2 =  r2_score(y, y_pred)
+print('Estadístico R2: ' , r2)
+
+plt.scatter(entrada, prediccion_modelo, color="red")
+plt.plot(entrada, prediccion_modelo, color="black")
+plt.show()
+
